@@ -7,9 +7,7 @@ on:
 
 jobs:
   config:
-    runs-on:
-      group: dena
-      labels: dena-small
+    runs-on: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v4
