@@ -1,0 +1,38 @@
+name: Deploy to Prod server
+run-name: ${{ github.actor }} is learning GitHub Actions
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  config:
+    runs-on:
+      group: dena
+      labels: dena-small
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect deployment url
+        id: detect-deploy-end-point
+        uses: ./.github/actions/detect-deploy-environment
+    outputs:
+      DEPLOYMENT_ENV: ${{ steps.detect-deploy-end-point.outputs.DEPLOYMENT_ENV }}
+      MODE: ${{ steps.detect-deploy-end-point.outputs.MODE }}
+
+  deployment:
+    runs-on: ubuntu-latest
+    needs: [config]
+    env:
+      DEPLOYMENT_NAME: ${{needs.config.outputs.DEPLOYMENT_ENV}}
+      MODE: ${{needs.config.outputs.MODE}}
+    steps:
+      - name: deploy
+        run: |
+          echo "========== Deploying =========="
+          echo "job deploy production server: "
+          echo $DEPLOYMENT_NAME
+          echo "Mode: $MODE"
+          make generate-$MODE
+          echo "========== DONE =========="

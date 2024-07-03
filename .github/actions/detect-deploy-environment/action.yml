@@ -1,0 +1,39 @@
+name: Detect deployment environment
+description: Read the deploy-config.txt file and determine the deployment URL
+
+runs:
+  using: composite
+  steps:
+    - name: Detect deploy url
+      shell: bash
+      run: |
+        source ./.github/deploy-config.txt 
+        deploy_url=''
+        mode='dev3'
+        branch=${{ github.ref_name }}
+
+        case $branch in
+          dev)
+            mode=$DEV_BRANCH
+            ;;
+          A1)
+            mode=$A1_BRANCH
+            ;;
+          A2)
+            mode=$A2_BRANCH
+            ;;
+          A2b)
+            mode=$A2b_BRANCH
+            ;;
+          *)
+            mode=$OTHER_BRANCH
+            ;;
+        esac
+
+        deploy_url="dena-tsubami-dev-gcp-${mode}-assets-notice-webview"
+        echo "DEPLOYMENT_ENV=$deploy_url" >> $GITHUB_OUTPUT
+        echo "MODE=$mode" >> $GITHUB_OUTPUT
+
+        echo "GITHUB BRANCH: $branch"
+        echo "END POINT DETECTED: $deploy_url"
+        echo "MODE DETECTED: $mode"
