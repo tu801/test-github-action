@@ -14,7 +14,37 @@ jobs:
 
       - name: Detect deployment url
         id: detect-deploy-end-point
-        uses: ./.github/actions/detect-deploy-environment
+        run: |
+          source ./.github/deploy-config.txt 
+          deploy_url=''
+          mode='dev3'
+          branch=${{ github.ref_name }}
+
+          case $branch in
+            dev)
+              mode=$DEV_BRANCH
+              ;;
+            A1)
+              mode=$A1_BRANCH
+              ;;
+            A2)
+              mode=$A2_BRANCH
+              ;;
+            A2b)
+              mode=$A2b_BRANCH
+              ;;
+            *)
+              mode=$OTHER_BRANCH
+              ;;
+          esac
+
+          deploy_url="dena-tsubami-dev-gcp-${mode}-assets-notice-webview"
+          echo "DEPLOYMENT_ENV=$deploy_url" >> $GITHUB_OUTPUT
+          echo "MODE=$mode" >> $GITHUB_OUTPUT
+
+          echo "GITHUB BRANCH: $branch"
+          echo "END POINT DETECTED: $deploy_url"
+          echo "MODE DETECTED: $mode"
     outputs:
       DEPLOYMENT_ENV: ${{ steps.detect-deploy-end-point.outputs.DEPLOYMENT_ENV }}
       MODE: ${{ steps.detect-deploy-end-point.outputs.MODE }}
