@@ -9,8 +9,8 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     outputs:
-      deployment_env: ${{ steps.step2.outputs.DEPLOYMENT_ENV }}
-      mode: ${{ steps.step2.outputs.MODE }}
+      deployment_env: ${{ steps.step2.outputs.deployment-env }}
+      mode: ${{ steps.step2.outputs.deploy-mode }}
     steps:
       - uses: actions/checkout@v4
       - name: Detect deployment url

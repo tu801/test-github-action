@@ -1,10 +1,18 @@
 name: Detect deployment environment
 description: Read the deploy-config.txt file and determine the deployment URL
 
+outputs:
+  deployment-env:
+    description: "Detected GCP environment"
+    value: ${{ steps.deploy-environment.outputs.DEPLOYMENT_ENV }}
+  deploy-mode:
+    description: "Detected deploy mode"
+    value: ${{ steps.deploy-environment.outputs.MODE }}
 runs:
   using: composite
   steps:
     - name: Detect deploy url
+      id: deploy-environment
       shell: bash
       run: |
         source ./.github/deploy-config.txt 
