@@ -20,6 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: job1
     steps:
+      - uses: actions/checkout@v4
       - env:
           OUTPUT1: ${{needs.job1.outputs.deployment_env}}
           OUTPUT2: ${{needs.job1.outputs.mode}}
